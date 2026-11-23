@@ -1,0 +1,192 @@
+/* Landing page only: the fixed scene layers, the navy backdrop the loader reveals, carousel text masks,
+   the scroll progress bar and the download block. Loaded after site.css. */
+
+canvas {
+  position: fixed;
+  inset: 0;
+}
+
+.section {
+  min-height: 125svh;
+  pointer-events: none;
+}
+
+.hero_container,
+.profile_container,
+.benefits_container,
+.argument_container,
+.carousel_tags-wrapper {
+  position: fixed;
+  inset: 0;
+}
+
+.benefits_nav {
+  position: fixed;
+}
+
+@property --color-scheme-1--accent-primary {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #011d41;
+}
+
+@property --color-scheme-1--accent-secondary {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #12203a;
+}
+
+@property --loader-reveal {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0vh;
+}
+
+:root {
+  transition: --color-scheme-1--accent-primary 0.6s ease-in-out, --color-scheme-1--accent-secondary 0.6s ease-in-out;
+}
+
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  transition: opacity 0.4s;
+}
+
+body::before {
+  height: 100vh;
+  top: 0;
+  background: #011d41;
+  transform: translateY(var(--loader-reveal, 0vh));
+  will-change: transform;
+}
+
+body::after {
+  background: #011d41;
+  opacity: 0;
+}
+
+body.is-profile-active::after {
+  opacity: 1;
+}
+
+h2[data-anim='chars-mask'],
+.heading-style-h2 [data-anim='chars-mask'] {
+  line-height: 1.2;
+}
+
+h2[data-anim='chars-mask'] .line-mask:not(:first-child),
+.heading-style-h2 [data-anim='chars-mask']:not(:first-child) .line-mask {
+  margin-top: -0.35em;
+}
+
+.carousel_tags-collection div[data-anim='chars-mask'] {
+  width: 100%;
+}
+
+.carousel_tags-collection .line {
+  display: flex !important;
+  justify-content: space-between;
+}
+
+.scroll_indicator {
+  width: calc(var(--p, 0) * 100%);
+}
+
+.scroll_indicator__core {
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.35) 55%, rgba(255, 255, 255, 1) 100%);
+}
+
+.scroll_indicator__mid {
+  background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.25) 60%, rgba(255, 255, 255, 0.95) 100%);
+}
+
+.scroll_indicator__halo {
+  background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.1) 65%, rgba(255, 255, 255, 0.5) 100%);
+}
+
+.scroll_indicator__hotspot {
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.5) 35%, transparent 70%);
+}
+
+.hero_gradient-wrapper {
+  display: none;
+}
+
+.hero_gradient,
+.gradient_overlay {
+  background: none;
+}
+
+.argument_svg {
+  filter: none;
+}
+
+.scroll_indicator__core,
+.scroll_indicator__mid,
+.scroll_indicator__halo,
+.scroll_indicator__hotspot {
+  display: none;
+}
+
+.button {
+  box-shadow: none;
+}
+
+.argument_svg svg * {
+  fill: var(--color-scheme-1--accent-secondary);
+  will-change: transform;
+}
+
+.argument_svg-blur {
+  display: none;
+}
+
+.download_container {
+  padding-top: 5rem;
+}
+
+.download_badges {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.download_badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.download_badge {
+  width: auto;
+}
+
+.download_badge.is-app-store {
+  height: 2.75rem;
+  /* Apple's SVG ratio, also for the box reserved before the lazy image loads. */
+  aspect-ratio: auto 119.66407 / 40;
+}
+
+.download_badge.is-google-play {
+  height: 4.125rem;
+  margin: -0.5rem 0;
+}
+
+.argument_photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@supports (-webkit-hyphens: none) {
+  .gradient_overlay,
+  .navbar_overlay {
+    filter: none;
+  }
+}
