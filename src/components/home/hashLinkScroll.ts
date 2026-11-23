@@ -30,8 +30,6 @@ function focusTarget(target: HTMLElement): void {
   target.classList.remove(NO_OUTLINE_CLASS);
 }
 
-// `programmatic: false` keeps the infinite scroll from taking the short way across the wrap seam,
-// which would aim above the top, where the frame loop clamps it to 0.
 function glideTo(lenis: Lenis, target: HTMLElement): void {
   const distance = target.getBoundingClientRect().top;
   lenis.scrollTo(target, {
@@ -39,7 +37,6 @@ function glideTo(lenis: Lenis, target: HTMLElement): void {
     easing: easeInOutCubic,
     duration: scrollSeconds(distance),
     immediate: prefersReducedMotion(),
-    programmatic: false,
     onComplete: () => focusTarget(target),
   });
 }
