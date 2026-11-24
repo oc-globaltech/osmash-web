@@ -1,32 +1,32 @@
-import { Argument } from "@/components/home/Argument";
-import { Benefits } from "@/components/home/Benefits";
-import { CarouselTags } from "@/components/home/CarouselTags";
-import { Faq } from "@/components/home/Faq";
-import { FullRange } from "@/components/home/FullRange";
-import { HeroCarousel } from "@/components/home/HeroCarousel";
-import { HomeExperience } from "@/components/home/HomeExperience";
-import { Hud } from "@/components/home/Hud";
-import { Navbar } from "@/components/home/Navbar";
-import { Profile } from "@/components/home/Profile";
-import { HomeSceneHost } from "@/components/home/scene/HomeSceneHost";
+import { CarouselProvider } from "@/components/home/CarouselProvider";
+import { CornerFrame } from "@/components/home/chrome/CornerFrame";
+import { SiteFooter } from "@/components/home/chrome/SiteFooter";
+import { TagStrip } from "@/components/home/chrome/TagStrip";
+import { TopBar } from "@/components/home/chrome/TopBar";
+import { SceneCanvas } from "@/components/home/scene/SceneCanvas";
+import { CloseUp } from "@/components/home/sections/CloseUp";
+import { HowItWorks } from "@/components/home/sections/HowItWorks";
+import { PhotoStage } from "@/components/home/sections/PhotoStage";
+import { PlayerPoints } from "@/components/home/sections/PlayerPoints";
+import { RingStage } from "@/components/home/sections/RingStage";
+import { ShuttleHero } from "@/components/home/sections/ShuttleHero";
 
 export default function HomePage() {
   return (
-    <HomeExperience>
-      <div className="page-wrapper">
-        <main className="main-wrapper">
-          <Navbar />
-          <HeroCarousel />
-          <Profile />
-          <Benefits />
-          <Argument />
-          <FullRange />
-          <Faq />
-          <CarouselTags />
-          <Hud />
-          <HomeSceneHost />
-        </main>
-      </div>
-    </HomeExperience>
+    <CarouselProvider>
+      <main>
+        <TopBar />
+        <ShuttleHero />
+        <CloseUp />
+        <PlayerPoints />
+        <PhotoStage />
+        <RingStage />
+        <HowItWorks />
+        <TagStrip />
+        <CornerFrame />
+        <SceneCanvas />
+      </main>
+      <SiteFooter />
+    </CarouselProvider>
   );
 }

@@ -3,8 +3,8 @@ import type { ReactNode } from "react";
 
 import { FONT_VARIABLES } from "@/app/fonts";
 
-import "../site.css";
-import "./landing.css";
+import "../tokens.css";
+import "../base.css";
 
 const TITLE = "O'Smash — Badminton coaching, run from the court";
 const DESCRIPTION =
