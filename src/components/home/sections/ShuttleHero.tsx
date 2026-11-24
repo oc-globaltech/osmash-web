@@ -121,10 +121,10 @@ export function ShuttleHero() {
         </div>
         <div ref={arrowsRef} data-part="hero-arrows" className={styles.arrows}>
           <button type="button" data-part="hero-prev" className={styles.arrow} aria-label={`Previous: ${FEATURES[(index + FEATURES.length - 1) % FEATURES.length].tag}`} onClick={() => carousel.previous()}>
-            <DotChevron />
+            <Chevron />
           </button>
           <button type="button" data-part="hero-next" className={`${styles.arrow} ${styles.forward}`} aria-label={`Next: ${FEATURES[(index + 1) % FEATURES.length].tag}`} onClick={() => carousel.next()}>
-            <DotChevron />
+            <Chevron />
           </button>
         </div>
         <p ref={hintRef} data-part="hero-scroll-hint" className={styles.hint}>
@@ -135,15 +135,11 @@ export function ShuttleHero() {
   );
 }
 
-// Five dots fanning out from a bright tip; drawn pointing back, mirrored for forward.
-function DotChevron() {
+// Drawn pointing back; the forward button mirrors it.
+function Chevron() {
   return (
-    <svg className={styles.chevron} viewBox="0 0 64 64" aria-hidden="true">
-      <circle cx="18" cy="32" r="3.2" />
-      <circle cx="30.5" cy="18.5" r="3" opacity="0.75" />
-      <circle cx="30.5" cy="45.5" r="3" opacity="0.75" />
-      <circle cx="43" cy="5" r="2.8" opacity="0.4" />
-      <circle cx="43" cy="59" r="2.8" opacity="0.4" />
+    <svg className={styles.chevron} viewBox="0 0 20 20" aria-hidden="true">
+      <path d="M12 4.5 6.5 10l5.5 5.5" />
     </svg>
   );
 }
