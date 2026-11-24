@@ -1,0 +1,80 @@
+/* O'Smash design tokens, shared by the landing and legal pages.
+   Breakpoints cannot be custom properties: media queries use 1024px (desktop) and 640px (phone below),
+   matching src/components/shared/breakpoints.ts. */
+
+@property --accent-2 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #0078fb;
+}
+
+:root {
+  /* Colour */
+  --navy: #011d41;
+  --white: #fff;
+  --white-10: #ffffff1a;
+  --white-20: #fff3;
+  --white-30: #ffffff4d;
+  --white-60: #fff9;
+  --white-80: #fffc;
+  --accent: var(--navy);
+  --accent-2: #0078fb;
+
+  /* Type: next/font sets --font-clash and --font-general on <html> */
+  --font-display: var(--font-clash), Arial, sans-serif;
+  --font-text: var(--font-general), Arial, sans-serif;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --text-xs: 0.8125rem;
+  --text-s: 0.9375rem;
+  --text-m: 1.0625rem;
+  --text-l: clamp(1.1875rem, 1rem + 0.5vw, 1.375rem);
+  --title-s: clamp(1.375rem, 1.1rem + 0.9vw, 1.875rem);
+  --title-m: clamp(1.875rem, 1.4rem + 1.6vw, 3rem);
+  --title-l: clamp(2.375rem, 1.6rem + 2.6vw, 4.25rem);
+  --title-xl: clamp(2.75rem, 1.7rem + 3.6vw, 5.5rem);
+  --leading-tight: 1.05;
+  --leading-snug: 1.25;
+  --leading-body: 1.55;
+
+  /* Space */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --space-9: 7rem;
+  --gutter: clamp(1.25rem, 4vw, 3.5rem);
+  --content-max: 82rem;
+  --header-height: 4.5rem;
+
+  /* Shape */
+  --radius-s: 0.5rem;
+  --radius-m: 1rem;
+  --radius-full: 999px;
+  --rule: 1px solid var(--white-20);
+  --focus-ring: 2px solid var(--accent-2);
+  --focus-offset: 3px;
+
+  /* Motion */
+  --duration-fast: 0.2s;
+  --duration-accent: 0.45s;
+
+  /* Layers: the scene canvas sits below every content layer */
+  --z-scene: 0;
+  --z-content: 1;
+  --z-header: 50;
+  --z-menu: 60;
+
+  transition: --accent-2 var(--duration-accent) ease-out;
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --header-height: 3.5rem;
+  }
+}
