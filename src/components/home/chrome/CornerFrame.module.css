@@ -1,0 +1,184 @@
+.cornerFrame {
+  /* The frame starts under the top bar's darkened band. */
+  --top-band: 8rem;
+  --half-gap: max(3rem, 3.5vw);
+  --fade: 0.6s ease-out;
+
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-content);
+  color: var(--white);
+  font-family: var(--font-roboto-mono), Arial, sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  pointer-events: none;
+}
+
+/* Oversized layer that drops out on the photo beat; it paints nothing over the flat scenes. */
+.shade {
+  position: absolute;
+  inset: -10%;
+  transition: opacity var(--fade);
+}
+
+.atPhoto .shade {
+  opacity: 0;
+}
+
+.frame {
+  position: absolute;
+  inset: var(--top-band) 0 max(2rem, 2vw);
+  color: rgb(255 255 255 / 50%);
+  transition:
+    opacity var(--fade),
+    visibility var(--fade);
+}
+
+/* Edge columns */
+
+.left,
+.right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  width: 0.5rem;
+}
+
+.left {
+  left: 4vw;
+  gap: var(--half-gap);
+}
+
+.right {
+  right: 4vw;
+  justify-content: space-between;
+}
+
+.half {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.rightTop,
+.rightBottom {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.rightTop .glyph {
+  margin-block-start: var(--half-gap);
+}
+
+.rightBottom .corner {
+  margin-block-start: calc(var(--half-gap) + 0.5rem);
+}
+
+.glyph {
+  display: block;
+}
+
+.letters {
+  display: flex;
+  flex-direction: column;
+  gap: max(2rem, 2vw);
+}
+
+/* Corner brackets: the top-left shape turned a quarter at a time */
+
+.corner {
+  flex: none;
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+.topRight {
+  rotate: 90deg;
+}
+
+.bottomRight {
+  rotate: 180deg;
+}
+
+.bottomLeft {
+  rotate: -90deg;
+}
+
+/* Scroll-hint chevrons, centred on the column, only on the first screen */
+
+.chevrons {
+  position: absolute;
+  bottom: 10rem;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.09rem;
+  translate: -50% 0;
+  opacity: 0;
+  transition: opacity var(--fade);
+}
+
+.atHero .chevrons {
+  opacity: 1;
+}
+
+/* No base max-width: it would shrink the column to the narrow edge it is centred on. */
+.chevron {
+  display: block;
+  width: 1.25rem;
+  max-width: none;
+  height: 1.125rem;
+  opacity: 0;
+  animation: chevron-wave 1.8s ease-in-out infinite;
+}
+
+.chevron:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.chevron:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+@keyframes chevron-wave {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  35% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 1023px) {
+  .atFaq .frame {
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+@media (max-width: 639px) {
+  .cornerFrame {
+    --top-band: 7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron {
+    opacity: 1;
+    animation: none;
+  }
+}
