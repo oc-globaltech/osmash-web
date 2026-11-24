@@ -1,0 +1,165 @@
+.stage {
+  position: relative;
+  height: 125svh;
+}
+
+/* Pinned over the scene; every feature's text is stacked in the same cell and only the active one shows. */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-content);
+  display: grid;
+  align-items: end;
+  justify-items: center;
+  padding-bottom: 42px;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.feature {
+  grid-area: 1 / 1;
+  width: calc(92vw - 51.5px);
+  font-size: 17.5px;
+  line-height: 1.5;
+}
+
+.away {
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* Below desktop the hero's tag stays up as the heading, so this one is left out. */
+.tag {
+  display: none;
+}
+
+.text {
+  position: relative;
+  width: min(392px, 100%);
+  height: 70px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.body {
+  line-height: 1.25;
+}
+
+.line {
+  display: block;
+}
+
+.cornerStart,
+.cornerEnd {
+  display: none;
+  position: absolute;
+  width: 7px;
+  height: 7px;
+}
+
+.cornerStart {
+  top: -14px;
+  left: -14px;
+  border-top: 1px solid var(--white);
+  border-left: 1px solid var(--white);
+}
+
+.cornerEnd {
+  right: -14px;
+  bottom: -14px;
+  border-right: 1px solid var(--white);
+  border-bottom: 1px solid var(--white);
+}
+
+/* Labels and leader lines pinned to the phone screen by the scene; desktop only. */
+.callouts {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .callouts {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-content);
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .calloutGroup {
+    position: absolute;
+    inset: 0;
+  }
+
+  .calloutLines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .calloutLines line {
+    stroke: var(--white);
+    stroke-opacity: 0.7;
+    stroke-width: 1;
+  }
+
+  .calloutLines circle {
+    fill: var(--white);
+    stroke: var(--white);
+    stroke-opacity: 0.35;
+    stroke-width: 6;
+    paint-order: stroke;
+  }
+
+  .callout {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 15px;
+    line-height: 1.3;
+    white-space: nowrap;
+    color: var(--white);
+  }
+
+  .overlay {
+    align-items: center;
+    justify-items: start;
+    padding: 0 0 0 10.236vw;
+  }
+
+  .feature {
+    width: 86.02vw;
+  }
+
+  .tag {
+    display: block;
+    width: 392px;
+    overflow: clip;
+    padding-block: 0.2em;
+    font-family: var(--font-display);
+    font-size: 42px;
+    font-weight: var(--weight-semibold);
+    line-height: 0.8;
+    text-transform: uppercase;
+  }
+
+  .text {
+    width: 392px;
+    height: auto;
+    margin: 28.8px 0 0;
+    text-align: start;
+  }
+
+  .body {
+    line-height: inherit;
+  }
+
+  .cornerStart,
+  .cornerEnd {
+    display: block;
+  }
+}

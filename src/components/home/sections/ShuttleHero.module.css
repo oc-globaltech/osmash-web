@@ -1,0 +1,127 @@
+/* Every scroll beat is 1.25 viewports tall; the hero's text is pinned to the viewport while it plays. */
+.stage {
+  position: relative;
+  height: 125svh;
+  --dock-width: min(490px, 92vw - 51.5px);
+}
+
+.dock {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: var(--z-content);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 21px;
+  pointer-events: none;
+}
+
+.titleBox {
+  position: relative;
+  width: var(--dock-width);
+}
+
+/* Read by screen readers only; it keeps the display type so it sits on the slides' baseline box. */
+.heading {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: max(35px, 4.167vw);
+  font-weight: var(--weight-semibold);
+  line-height: 1;
+}
+
+.slides {
+  display: grid;
+}
+
+.slide {
+  grid-area: 1 / 1;
+}
+
+.away {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.tag {
+  overflow: clip;
+  padding-block: 0.2em;
+  font-family: var(--font-display);
+  font-size: 31.5px;
+  font-weight: var(--weight-semibold);
+  line-height: 0.8;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Each letter's box reaches into the tag's padding, so a letter one box-height up or down is fully clipped. */
+.char {
+  display: inline-block;
+  padding-block: 0.2em;
+  margin-block: -0.2em;
+}
+
+.arrows {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 35svh;
+  height: 0;
+  translate: -50% 0;
+  transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.spread {
+  width: 88svh;
+}
+
+.arrow {
+  width: 31.5px;
+  height: 31.5px;
+  color: var(--white);
+  pointer-events: auto;
+}
+
+.forward .chevron {
+  scale: -1 1;
+}
+
+.chevron {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+/* The gap keeps the tag where it sat when a slide bar ran between them. */
+.hint {
+  width: var(--dock-width);
+  margin-top: 52.6px;
+  color: var(--white-60);
+  font-size: 12.25px;
+  line-height: 1.5;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+@media (min-width: 1024px) {
+  .tag {
+    font-size: 42px;
+  }
+}
+
+@media (max-width: 639px) {
+  .hint {
+    margin-top: 49px;
+  }
+}

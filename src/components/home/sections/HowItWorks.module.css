@@ -1,0 +1,110 @@
+/* Unlike the pinned beats, this one is plain page flow, above the scene so its controls take clicks.
+   The gap above it scales above 1167px. */
+.stage {
+  position: relative;
+  z-index: var(--z-content);
+  --gap: max(56px, 4.8vw);
+  padding-top: var(--gap);
+}
+
+/* Top padding clears the fixed TopBar and its section label at the faq landing. */
+.steps {
+  padding-top: var(--space-6);
+  padding-inline: var(--gutter);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: max(31.5px, 7.5vw);
+  font-weight: var(--weight-semibold);
+  line-height: 0.8;
+  text-transform: uppercase;
+}
+
+.titleLine {
+  display: block;
+}
+
+.list {
+  margin-top: var(--space-7);
+  border-bottom: var(--rule);
+  counter-reset: step;
+  list-style: none;
+}
+
+/* Phone: number and step title share a line, the body hangs under the title. */
+.step {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: var(--space-3);
+  padding-block: var(--space-6);
+  border-top: var(--rule);
+  counter-increment: step;
+}
+
+.step::before {
+  content: counter(step);
+  color: var(--white-60);
+  font-family: var(--font-display);
+  font-size: var(--title-s);
+  font-weight: var(--weight-medium);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.stepTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-l);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+}
+
+.stepBody {
+  grid-column: 2;
+  max-inline-size: 26ch;
+  margin-top: var(--space-2);
+  color: var(--white-80);
+  font-size: var(--text-m);
+  line-height: var(--leading-body);
+}
+
+/* Tablet up: the steps read left to right as three columns, each under its own hairline. */
+@media (min-width: 640px) {
+  .list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: var(--space-5);
+    border-bottom: 0;
+  }
+
+  .step {
+    display: block;
+    padding-block: var(--space-5) 0;
+  }
+
+  .step::before {
+    display: block;
+  }
+
+  .stepTitle {
+    margin-top: var(--space-4);
+  }
+}
+
+@media (min-width: 1024px) {
+  .steps {
+    width: 80vw;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+
+  .title {
+    font-size: 7.5vw;
+  }
+
+  .list {
+    column-gap: var(--space-7);
+    margin-top: var(--space-8);
+  }
+}

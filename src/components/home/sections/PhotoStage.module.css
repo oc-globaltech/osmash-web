@@ -1,0 +1,77 @@
+.stage {
+  position: relative;
+  height: 125svh;
+}
+
+/* Pinned under the scene layer, so the phone passes in front of the photo and the wordmark. */
+.media {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-scene);
+  isolation: isolate;
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+}
+
+.away {
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* Its own compositor layer: the photo fades often, and the layer's scaling is the look the page was tuned on. */
+.photo {
+  object-fit: cover;
+  will-change: transform;
+}
+
+/* Two lines in two sizes, both scaled with the wordmark's width; screened over the photo it reads as a tinted light. */
+.wordmark {
+  position: absolute;
+  bottom: 42px;
+  left: 50%;
+  width: calc(77.4vw - 56.9px);
+  height: calc(23.86vw - 12.57px);
+  container-type: inline-size;
+  translate: -50% 0;
+  opacity: 0.72;
+  mix-blend-mode: screen;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.line {
+  display: block;
+  color: var(--accent-2);
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  line-height: 0.8;
+  white-space: nowrap;
+}
+
+.line:first-child {
+  padding-top: calc(2.94px + 0.458cqi);
+  font-size: 19cqi;
+}
+
+.line:last-child {
+  position: absolute;
+  inset-inline: 0;
+  bottom: calc(2.6px - 0.487cqi);
+  font-size: 14.45cqi;
+}
+
+@media (min-width: 1024px) {
+  .wordmark {
+    top: 50%;
+    bottom: auto;
+    width: 80vw;
+    height: calc(24.664vw + 4.97px);
+    translate: -50% -50%;
+  }
+}
