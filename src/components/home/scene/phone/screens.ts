@@ -1,7 +1,6 @@
 import * as THREE from "three";
 
 import { FEATURE_PRIMARY_COLOR, FEATURES, type Feature } from "@/components/home/features";
-import type { AssetProfile as DeviceProfile } from "../device";
 
 // Under 1 so the app's white stays below the clipping guard.
 const SCREEN_BRIGHTNESS = 0.9;
@@ -20,7 +19,7 @@ export type ScreenMaterials = {
   dispose: () => void;
 };
 
-type ScreenDeps = { renderer: THREE.WebGLRenderer; profile: DeviceProfile; signal: AbortSignal };
+type ScreenDeps = { renderer: THREE.WebGLRenderer; signal: AbortSignal };
 
 // @placeholder until the app screenshots land: the slide colour with its name in large type.
 export const placeholderScreens: ScreenSource = async (feature) => {
@@ -54,7 +53,8 @@ function createScreenOffTexture(): THREE.DataTexture {
 function prepareTexture(texture: THREE.Texture, deps: ScreenDeps): void {
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.minFilter = THREE.LinearMipmapLinearFilter;
-  texture.anisotropy = Math.min(deps.renderer.capabilities.getMaxAnisotropy(), deps.profile.maxAnisotropy);
+  // The phone turns the screen away from the camera, so small app text needs every anisotropic sample the GPU has.
+  texture.anisotropy = deps.renderer.capabilities.getMaxAnisotropy();
   // Upload now, so the first frame that shows it does not stall.
   deps.renderer.initTexture(texture);
 }

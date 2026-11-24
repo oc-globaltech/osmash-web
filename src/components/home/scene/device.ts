@@ -4,7 +4,6 @@ import { isDesktop } from "@/components/shared/breakpoints";
 export type AssetProfile = {
   featherBump: boolean;
   shuttleCount: number;
-  maxAnisotropy: number;
 };
 
 // Read once at mount; a later resize keeps the render path the page started with.
@@ -14,13 +13,10 @@ export type DeviceProfile = AssetProfile & {
   pixelRatioCap: number;
 };
 
-// A full-power desktop gains little above DPR 1.5; phones stay at 2, where they need no SMAA.
-const FULL_POWER_PIXEL_RATIO = 1.5;
-const LIGHT_PIXEL_RATIO = 2;
+// DPR 2 on every device: below it a retina screen upscales the canvas and the phone's app text goes soft.
+const PIXEL_RATIO_CAP = 2;
 const FULL_POWER_SHUTTLES = 24;
 const LIGHT_SHUTTLES = 12;
-const FULL_POWER_ANISOTROPY = 8;
-const LIGHT_ANISOTROPY = 4;
 
 // iPhones and iPods name themselves; iPadOS asks for the desktop site and only its touch points give it away.
 function runsOnAppleTouchDevice(): boolean {
@@ -33,9 +29,8 @@ export function readDeviceProfile(): DeviceProfile {
   const fullPower = isDesktop() && !runsOnAppleTouchDevice();
   return {
     fullPower,
-    pixelRatioCap: fullPower ? FULL_POWER_PIXEL_RATIO : LIGHT_PIXEL_RATIO,
+    pixelRatioCap: PIXEL_RATIO_CAP,
     featherBump: fullPower,
     shuttleCount: fullPower ? FULL_POWER_SHUTTLES : LIGHT_SHUTTLES,
-    maxAnisotropy: fullPower ? FULL_POWER_ANISOTROPY : LIGHT_ANISOTROPY,
   };
 }

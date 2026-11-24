@@ -1,7 +1,6 @@
 import * as THREE from "three";
 
 import { FEATURES } from "@/components/home/features";
-import type { AssetProfile as DeviceProfile } from "../device";
 import type { MaterialFactory } from "../materialKit";
 import { createPhoneGeometries, type PhoneGeometries } from "./geometry";
 import { createScreenMaterials, type ScreenSource } from "./screens";
@@ -37,7 +36,6 @@ export type Phones = {
 
 export type PhonesDeps = {
   materials: MaterialFactory;
-  profile: DeviceProfile;
   screens: ScreenSource;
   // Screens shown in place of the slide's own on chosen stages.
   overrideScreens?: readonly string[];
@@ -74,7 +72,7 @@ function createPhone(geometries: PhoneGeometries, body: BodyMaterials, screen: T
 export function createPhones(scene: THREE.Scene, renderer: THREE.WebGLRenderer, deps: PhonesDeps): Phones {
   const geometries = createPhoneGeometries();
   const body = createBodyMaterials(deps.materials);
-  const screens = createScreenMaterials(deps.screens, { renderer, profile: deps.profile, signal: deps.signal }, deps.overrideScreens);
+  const screens = createScreenMaterials(deps.screens, { renderer, signal: deps.signal }, deps.overrideScreens);
   const items = FEATURES.map((_, slide) => {
     const phone = createPhone(geometries, body, screens.materials[slide]);
     scene.add(phone.group);

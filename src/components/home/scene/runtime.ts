@@ -69,7 +69,7 @@ function buildScene(signal: AbortSignal): Scene {
   const materials = createMaterialFactory(profile);
   const podium = createPodium(view.scene, materials);
   const shuttles = createShuttles(view.scene, view.renderer, { materials, profile });
-  const phones = createPhones(view.scene, view.renderer, { materials, profile, screens: appScreenshots, overrideScreens: PLAYER_SCREENS, signal });
+  const phones = createPhones(view.scene, view.renderer, { materials, screens: appScreenshots, overrideScreens: PLAYER_SCREENS, signal });
   warmUp(view, phones.items.map(({ group }) => group));
   signal.addEventListener(
     "abort",
