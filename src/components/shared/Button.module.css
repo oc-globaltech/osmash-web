@@ -1,0 +1,84 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 0.9rem 1.25rem;
+  border-radius: var(--radius-s);
+  font-size: 0.875rem;
+  font-weight: var(--weight-regular);
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+.primary {
+  background-color: var(--white);
+  color: #000;
+}
+
+.ghost {
+  padding: 0.25rem calc(1.25rem - 1px);
+  border: 1px solid var(--white);
+  border-radius: 0.25rem;
+  background-color: transparent;
+  color: var(--white);
+}
+
+/* Letter roll: the label is clipped to one line, the second copy waits just below it. */
+
+.label {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+.outgoing,
+.incoming {
+  display: flex;
+}
+
+.incoming {
+  position: absolute;
+  inset: 0;
+}
+
+.letter {
+  display: block;
+  white-space: pre;
+  transition: transform 0.5s cubic-bezier(0.3, 0.75, 0.25, 1);
+}
+
+.incoming .letter {
+  transform: translateY(110%);
+}
+
+@media (hover: hover) and (min-width: 1024px) {
+  .button:hover .outgoing .letter,
+  .button:focus-visible .outgoing .letter {
+    transform: translateY(-110%);
+  }
+
+  .button:hover .incoming .letter,
+  .button:focus-visible .incoming .letter {
+    transform: none;
+  }
+}
+
+@media not ((hover: hover) and (min-width: 1024px)) {
+  .incoming {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .letter {
+    transition: none;
+  }
+}

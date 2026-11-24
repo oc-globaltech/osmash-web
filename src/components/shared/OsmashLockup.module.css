@@ -1,0 +1,20 @@
+.lockup {
+  display: flex;
+  align-items: center;
+}
+
+.symbol {
+  width: 2.375rem;
+  height: 1.75rem;
+  margin-inline-end: 0.625rem;
+}
+
+/* The name may run past a narrow logo slot rather than wrap. */
+.name {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: var(--weight-semibold);
+  line-height: 1.5;
+  letter-spacing: -0.025em;
+  white-space: nowrap;
+}

@@ -1,8 +1,13 @@
-// Desktop layouts and hover effects start at 992px; below is tablet and phone.
-export const DESKTOP_MIN_WIDTH = 992;
-const DESKTOP_QUERY = `(min-width: ${DESKTOP_MIN_WIDTH}px)`;
-export const MOBILE_QUERY = `(max-width: ${DESKTOP_MIN_WIDTH - 1}px)`;
+// Desktop from 1024px, phone below 640px, tablet in between. tokens.css repeats these in its media queries.
+export const DESKTOP_MIN_PX = 1024;
+export const PHONE_BELOW_PX = 640;
 
-export const isDesktopViewport = (): boolean => window.matchMedia(DESKTOP_QUERY).matches;
+export const MEDIA = {
+  desktop: `(min-width: ${DESKTOP_MIN_PX}px)`,
+  belowDesktop: `(max-width: ${DESKTOP_MIN_PX - 1}px)`,
+  phone: `(max-width: ${PHONE_BELOW_PX - 1}px)`,
+} as const;
 
-export const isMobileViewport = (): boolean => window.matchMedia(MOBILE_QUERY).matches;
+export const isDesktop = (): boolean => window.matchMedia(MEDIA.desktop).matches;
+
+export const isPhone = (): boolean => window.matchMedia(MEDIA.phone).matches;
