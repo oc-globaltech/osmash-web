@@ -1,4 +1,3 @@
-import { Roboto_Mono } from "next/font/google";
 import localFont from "next/font/local";
 
 const clash = localFont({
@@ -18,11 +17,5 @@ const general = localFont({
   ],
 });
 
-const robotoMono = Roboto_Mono({
-  variable: "--font-roboto-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-});
-
-// Classes for <html> that declare --font-clash, --font-general and --font-roboto-mono.
-export const FONT_VARIABLES = `${clash.variable} ${general.variable} ${robotoMono.variable}`;
+// Classes for <html> that declare --font-clash and --font-general.
+export const FONT_VARIABLES = `${clash.variable} ${general.variable}`;

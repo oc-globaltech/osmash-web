@@ -1,7 +1,5 @@
 import { CarouselProvider } from "@/components/home/CarouselProvider";
-import { CornerFrame } from "@/components/home/chrome/CornerFrame";
 import { SiteFooter } from "@/components/home/chrome/SiteFooter";
-import { TagStrip } from "@/components/home/chrome/TagStrip";
 import { TopBar } from "@/components/home/chrome/TopBar";
 import { SceneCanvas } from "@/components/home/scene/SceneCanvas";
 import { CloseUp } from "@/components/home/sections/CloseUp";
@@ -22,8 +20,6 @@ export default function HomePage() {
         <PhotoStage />
         <RingStage />
         <HowItWorks />
-        <TagStrip />
-        <CornerFrame />
         <SceneCanvas />
       </main>
       <SiteFooter />
