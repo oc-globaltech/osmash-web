@@ -7,7 +7,6 @@ import { OsmashLockup } from "@/components/shared/OsmashLockup";
 import { COPYRIGHT, STORE_URL, SUPPORT_MAILTO } from "@/components/shared/osmash";
 
 import { DOWNLOAD, FAQ, NAV } from "../content";
-import { useDotPulse } from "./dotPulse";
 import { useScrollStage } from "./scrollStage";
 import styles from "./TopBar.module.css";
 import { useTopBarMenu } from "./topBarMenu";
@@ -25,8 +24,9 @@ export function TopBar() {
         <SectionLabel />
         <div className={styles.actions}>
           <MenuArea />
+          {/* A plain span opts out of the letter roll, which would fight the hover fill. */}
           <Button href={STORE_URL} className={styles.cta} data-part="nav-cta">
-            {NAV.ctaLabel}
+            <span>{NAV.ctaLabel}</span>
           </Button>
         </div>
       </div>
@@ -48,7 +48,6 @@ function SectionLabel() {
 
 function MenuArea() {
   const { open, menuId, menuAreaRef, toggleRef, toggle, closeSheetAfterJump } = useTopBarMenu();
-  useDotPulse(toggleRef);
 
   return (
     <div ref={menuAreaRef} className={styles.menuArea}>
@@ -61,7 +60,7 @@ function MenuArea() {
         onClick={toggle}
         data-part="nav-menu-button"
       >
-        <MenuDotsIcon />
+        <MenuIcon />
         <span data-part="nav-menu-button-label">{NAV.menuLabel}</span>
       </button>
       <div id={menuId} className={styles.menu} data-open={open || undefined} data-part="nav-menu">
@@ -97,13 +96,12 @@ function SheetExtras() {
   );
 }
 
-function MenuDotsIcon() {
+// Two lines that cross into a close mark while the menu is open; the toggle's aria-expanded drives it.
+function MenuIcon() {
   return (
-    <svg className={styles.menuIcon} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-part="nav-menu-button-icon">
-      <circle cx="2.3" cy="2.1" r="2.2" />
-      <circle cx="18" cy="2.1" r="2.2" />
-      <circle cx="2.3" cy="17.2" r="2.2" />
-      <circle cx="18" cy="17" r="2.2" />
+    <svg className={styles.menuIcon} viewBox="0 0 16 16" aria-hidden="true" data-part="nav-menu-button-icon">
+      <line className={styles.menuLineTop} x1="1" y1="8" x2="15" y2="8" />
+      <line className={styles.menuLineBottom} x1="1" y1="8" x2="15" y2="8" />
     </svg>
   );
 }
