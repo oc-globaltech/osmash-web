@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
-import type { DeviceProfile } from "../deviceProfile";
-import { lerp } from "../math";
+import type { AssetProfile as DeviceProfile } from "../device";
+import { lerp } from "../numeric";
 
 const TEXTURE_WIDTH = 512;
 const TEXTURE_HEIGHT = 1024;

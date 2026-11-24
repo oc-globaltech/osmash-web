@@ -1,8 +1,8 @@
 import * as THREE from "three";
 
 import { FEATURES } from "@/components/home/features";
-import type { DeviceProfile } from "../deviceProfile";
-import type { MaterialFactory } from "../materials";
+import type { AssetProfile as DeviceProfile } from "../device";
+import type { MaterialFactory } from "../materialKit";
 import { createPhoneGeometries, type PhoneGeometries } from "./geometry";
 import { createScreenMaterials, type ScreenSource } from "./screens";
 
@@ -13,27 +13,43 @@ const FRAME_METALNESS = 0.15;
 const ISLAND_DARKEN = 0.85;
 const FRAME_ENV_INTENSITY = 1.5;
 const GLASS_COLOR = 0x07090c;
-const GLASS_ROUGHNESS = 0.12;
-const GLASS_ENV_INTENSITY = 0.6;
+// Matte black, so the bezel never catches a white hotspot.
+const GLASS_ROUGHNESS = 1;
+const GLASS_ENV_INTENSITY = 0;
 
 type BodyMaterials = { frame: THREE.Material; glass: THREE.Material; island: THREE.Material };
+
+// Only the full-power physical material has a specular control.
+function withoutSpecular(material: THREE.MeshStandardMaterial): THREE.MeshStandardMaterial {
+  if (material instanceof THREE.MeshPhysicalMaterial) material.specularIntensity = 0;
+  return material;
+}
 
 // `group` takes the shuttle's pose; `pivot` takes the turn about the long axis on top of it.
 export type Phone = { group: THREE.Group; pivot: THREE.Group };
 
 export type Phones = {
   items: Phone[];
+  // Puts override screen `index` on every phone, or null for each slide's own screen.
+  showOverride: (index: number | null) => void;
   dispose: () => void;
 };
 
-export type PhonesDeps = { materials: MaterialFactory; profile: DeviceProfile; screens: ScreenSource; signal: AbortSignal };
+export type PhonesDeps = {
+  materials: MaterialFactory;
+  profile: DeviceProfile;
+  screens: ScreenSource;
+  // Screens shown in place of the slide's own on chosen stages.
+  overrideScreens?: readonly string[];
+  signal: AbortSignal;
+};
 
 function createBodyMaterials(materials: MaterialFactory): BodyMaterials {
   const frameParams = { roughness: FRAME_ROUGHNESS, metalness: FRAME_METALNESS, envMapIntensity: FRAME_ENV_INTENSITY };
   return {
     frame: materials.make({ color: FRAME_COLOR, ...frameParams }),
     island: materials.make({ color: new THREE.Color(FRAME_COLOR).multiplyScalar(ISLAND_DARKEN), ...frameParams }),
-    glass: materials.make({ color: GLASS_COLOR, roughness: GLASS_ROUGHNESS, metalness: 0, envMapIntensity: GLASS_ENV_INTENSITY }),
+    glass: withoutSpecular(materials.make({ color: GLASS_COLOR, roughness: GLASS_ROUGHNESS, metalness: 0, envMapIntensity: GLASS_ENV_INTENSITY })),
   };
 }
 
@@ -58,7 +74,7 @@ function createPhone(geometries: PhoneGeometries, body: BodyMaterials, screen: T
 export function createPhones(scene: THREE.Scene, renderer: THREE.WebGLRenderer, deps: PhonesDeps): Phones {
   const geometries = createPhoneGeometries();
   const body = createBodyMaterials(deps.materials);
-  const screens = createScreenMaterials(deps.screens, { materials: deps.materials, renderer, profile: deps.profile, signal: deps.signal });
+  const screens = createScreenMaterials(deps.screens, { renderer, profile: deps.profile, signal: deps.signal }, deps.overrideScreens);
   const items = FEATURES.map((_, slide) => {
     const phone = createPhone(geometries, body, screens.materials[slide]);
     scene.add(phone.group);
@@ -68,5 +84,5 @@ export function createPhones(scene: THREE.Scene, renderer: THREE.WebGLRenderer, 
     Object.values(geometries).forEach((geometry) => geometry.dispose());
     screens.dispose();
   };
-  return { items, dispose };
+  return { items, showOverride: screens.showOverride, dispose };
 }

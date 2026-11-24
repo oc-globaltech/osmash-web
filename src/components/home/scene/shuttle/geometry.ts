@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 
-import { lerp } from "../math";
+import { lerp } from "../numeric";
 
 const SHUTTLE_LENGTH = 3.4;
 const SHUTTLE_TOP = SHUTTLE_LENGTH / 2;

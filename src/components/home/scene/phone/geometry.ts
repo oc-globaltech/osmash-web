@@ -13,6 +13,8 @@ const GLASS_RADIUS = 0.21;
 const SCREEN = { width: 1.5, height: 3.26, radius: 0.18 } as const;
 // Stacked a hair apart in z so the coplanar front layers never z-fight.
 const LAYER_GAP = 0.001;
+// The screen's face in the phone's own frame, for pinning labels to points on the screenshot.
+export const SCREEN_FACE = { width: SCREEN.width, height: SCREEN.height, z: BODY_FRONT + 2 * LAYER_GAP } as const;
 const PUNCH_RADIUS = 0.035;
 const PUNCH_SEGMENTS = 24;
 const PUNCH_BELOW_TOP = 0.12;

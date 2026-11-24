@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
-import type { DeviceProfile } from "../deviceProfile";
-import type { MaterialFactory } from "../materials";
+import type { AssetProfile as DeviceProfile } from "../device";
+import type { MaterialFactory } from "../materialKit";
 import { createFeatherTextures } from "./featherTexture";
 import { createBandGeometry, createCorkGeometry, createSkirtGeometry, createThreadGeometry } from "./geometry";
 

@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import type { MaterialFactory } from "./materials";
+import type { MaterialFactory } from "./materialKit";
 
 type ProfilePoint = [radius: number, y: number];
 
