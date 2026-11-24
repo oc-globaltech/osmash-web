@@ -82,6 +82,7 @@
   display: block;
 }
 
+/* A hairline track down the right edge; the current point's link marks its stretch of it. */
 .rail {
   position: fixed;
   top: 50%;
@@ -89,45 +90,64 @@
   z-index: var(--z-content);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
+  gap: var(--space-2);
+  border-inline-end: var(--rule);
+  border-radius: var(--radius-s) 0 0 var(--radius-s);
+  /* The rail crosses the white phone and shuttles; the navy backing keeps labels and icons readable there. */
+  background-color: rgb(1 29 65 / 75%);
   translate: 0 -50%;
   visibility: hidden;
   opacity: 0;
 }
 
 .railLink {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--white-20);
-  border-radius: 50%;
-  background-color: rgb(255 255 255 / 5%);
-  color: rgb(255 255 255 / 50%);
-  transition:
-    color var(--duration-fast) ease-out,
-    border-color var(--duration-fast) ease-out,
-    box-shadow var(--duration-fast) ease-out;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  min-width: 44px;
+  min-height: 44px;
+  padding-inline: var(--space-2) var(--space-4);
+  box-sizing: border-box;
+  color: var(--white-60);
+  font-size: var(--text-xs);
+  line-height: var(--leading-snug);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color var(--duration-fast) ease-out;
 }
 
+/* A quarter of white keeps the line above 3:1 on navy for every accent, as the number square does. */
 .current {
-  border-color: var(--accent-2);
-  box-shadow:
-    inset 0 0 0 1px rgb(255 255 255 / 15%),
-    inset -2px 4px 14px 1px var(--accent-2);
   color: var(--white);
 }
 
-.icon {
-  width: 21px;
-  height: 28px;
+.current::after {
+  content: "";
+  position: absolute;
+  inset-block: var(--space-2);
+  right: -1.5px;
+  width: 2px;
+  background-color: color-mix(in srgb, var(--accent-2) 75%, var(--white));
 }
 
-.separator {
-  width: 1px;
-  height: 1px;
-  margin-block: 17.5px;
-  background-color: var(--white-80);
+.railLabel {
+  display: none;
+  white-space: nowrap;
+}
+
+.icon {
+  flex: none;
+  width: 22px;
+  height: 22px;
+}
+
+@media (hover: hover) {
+  .railLink:hover {
+    color: var(--white);
+  }
 }
 
 @media (min-width: 640px) {
@@ -159,13 +179,13 @@
     line-height: inherit;
   }
 
-  .railLink {
-    width: 51px;
-    height: 51px;
+  .railLabel {
+    display: block;
   }
+}
 
-  .icon {
-    width: 28px;
-    height: 31.5px;
+@media (prefers-reduced-motion: reduce) {
+  .railLink {
+    transition: none;
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { gsap, type SplitText } from "@/components/shared/gsap";
 
@@ -69,7 +69,7 @@ function bindPoints(root: HTMLElement, signal: AbortSignal): void {
   );
 }
 
-// Four scroll beats for players, each with its pinned text, plus the rail of round links to them.
+// Four scroll beats for players, each with its pinned text, plus the rail of links to them.
 export function PlayerPoints() {
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -118,14 +118,12 @@ function PointRail() {
   return (
     <nav data-part="player-rail" className={styles.rail} aria-label={SUBHEAD}>
       {PLAYER_POINTS.map((point, index) => (
-        <Fragment key={point.title}>
-          <a data-part="player-rail-link" href={`#${ANCHOR_IDS[index]}`} className={styles.railLink} aria-label={point.title}>
-            <span data-part="player-rail-icon" className={styles.icon}>
-              {point.icon}
-            </span>
-          </a>
-          {index < PLAYER_POINTS.length - 1 && <span data-part="player-rail-separator" className={styles.separator} aria-hidden="true" />}
-        </Fragment>
+        <a key={point.title} data-part="player-rail-link" href={`#${ANCHOR_IDS[index]}`} className={styles.railLink} aria-label={point.title}>
+          <span className={styles.railLabel}>{point.title}</span>
+          <span data-part="player-rail-icon" className={styles.icon}>
+            {point.icon}
+          </span>
+        </a>
       ))}
     </nav>
   );
