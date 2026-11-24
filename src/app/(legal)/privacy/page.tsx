@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { LegalPage } from "@/components/legal/LegalPage";
+import { LegalDocument } from "@/components/legal/LegalDocument";
 
 const TITLE = "Privacy Notice — O'Smash";
 
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 // Section headings are h3 to fit this layout.
 export default function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Notice" path="/privacy">
+    <LegalDocument title="Privacy Notice" path="/privacy">
       <p>
         O’Smash is a mobile application for organising badminton coaching in Malaysia. Coaches and academies use it to
         schedule sessions, manage their players, record attendance and take monthly fees. Players and their parents use
@@ -687,6 +687,6 @@ export default function PrivacyPage() {
         You may also complain to the Personal Data Protection Commissioner (Jabatan Perlindungan Data Peribadi
         Malaysia). This notice is governed by the laws of Malaysia.
       </p>
-    </LegalPage>
+    </LegalDocument>
   );
 }

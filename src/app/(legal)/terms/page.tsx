@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { LegalPage } from "@/components/legal/LegalPage";
+import { LegalDocument } from "@/components/legal/LegalDocument";
 
 const TITLE = "Terms of Use — O'Smash";
 
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 // Section headings are h3 to fit this layout.
 export default function TermsPage() {
   return (
-    <LegalPage title="Terms of Use" path="/terms">
+    <LegalDocument title="Terms of Use" path="/terms">
       <p>
         These terms are the agreement between you and OC Global Technology Sdn. Bhd. for your use of O’Smash. Please
         read them. If you do not accept them, please do not use O’Smash.
@@ -603,6 +603,6 @@ export default function TermsPage() {
         refunds, that policy applies. A person who is not a party to these terms has no right to enforce them under the
         Contracts (Rights of Third Parties) Act 2001.
       </p>
-    </LegalPage>
+    </LegalDocument>
   );
 }

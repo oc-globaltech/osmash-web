@@ -2,9 +2,12 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 import { FONT_VARIABLES } from "@/app/fonts";
-import { LegalNavbar } from "@/components/legal/LegalNavbar";
+import { LegalHeader } from "@/components/legal/LegalHeader";
 
-import "../site.css";
+import "../tokens.css";
+import "../base.css";
+
+import styles from "./legal.module.css";
 
 export const metadata: Metadata = {
   robots: { index: false },
@@ -17,13 +20,9 @@ type LegalLayoutProps = {
 export default function LegalLayout({ children }: LegalLayoutProps) {
   return (
     <html className={FONT_VARIABLES} lang="en">
-      <body>
-        <div className="page-wrapper">
-          <div className="main-wrapper">
-            {children}
-            <LegalNavbar />
-          </div>
-        </div>
+      <body className={styles.page}>
+        {children}
+        <LegalHeader />
       </body>
     </html>
   );

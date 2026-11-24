@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { LegalPage } from "@/components/legal/LegalPage";
+import { LegalDocument } from "@/components/legal/LegalDocument";
 
 const TITLE = "Refund and Cancellation Policy — O'Smash";
 
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 // Section headings are h3 to fit this layout.
 export default function RefundPolicyPage() {
   return (
-    <LegalPage title="Refund and Cancellation Policy" path="/refund-policy">
+    <LegalDocument title="Refund and Cancellation Policy" path="/refund-policy">
       <p>
         This policy explains how payments in O’Smash are billed, how to cancel a plan, and when we refund. It forms part
         of the O’Smash <Link href="/terms">Terms of Use</Link>. Where the two differ on refunds or cancellation, this
@@ -306,6 +306,6 @@ export default function RefundPolicyPage() {
         Malaysia. Email <a href="mailto:support@osmash.ocgt.app">support@osmash.ocgt.app</a>. We aim to reply within two
         business days.
       </p>
-    </LegalPage>
+    </LegalDocument>
   );
 }
