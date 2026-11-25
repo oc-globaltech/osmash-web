@@ -9,6 +9,7 @@ import { useCarousel } from "../carouselContext";
 import { FEATURES, type Feature } from "../features";
 import { riseIn, setBelow, splitLines } from "./revealText";
 import { fadeIn, fadeOut, watchActiveStage } from "./stageFades";
+import { SlideHint } from "./SlideHint";
 import styles from "./CloseUp.module.css";
 
 // Shows only the active slide's callouts; the scene pins them to the phone every frame while `data-active` is set.
@@ -97,6 +98,7 @@ export function CloseUp() {
           </div>
         ))}
       </div>
+      <SlideHint stage="closeup" />
     </section>
   );
 }

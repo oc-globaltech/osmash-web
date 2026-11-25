@@ -8,6 +8,7 @@ import { useCarousel } from "../carouselContext";
 import { CLOSING_TITLE } from "../content";
 import { FEATURES } from "../features";
 import { fadeIn, fadeOut, watchActiveStage } from "./stageFades";
+import { SlideHint } from "./SlideHint";
 import styles from "./PhotoStage.module.css";
 
 // "Smash your limits" set on two lines: the first word, then the rest.
@@ -50,6 +51,7 @@ export function PhotoStage() {
           <span className={styles.line}>{OTHER_WORDS.join(" ")}</span>
         </h2>
       </div>
+      <SlideHint stage="photo" />
     </section>
   );
 }
