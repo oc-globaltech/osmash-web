@@ -22,7 +22,8 @@
 .logo {
   position: relative;
   z-index: 1;
-  grid-column: 2;
+  grid-column: 1;
+  justify-self: start;
   display: flex;
   width: 9rem;
   color: inherit;
@@ -36,8 +37,7 @@
 .sectionLabel {
   position: absolute;
   top: calc(100% - 0.65rem);
-  left: 50%;
-  translate: -50% 0;
+  left: 0;
   color: var(--white-80);
   font-size: 0.75rem;
   line-height: 1.5;
@@ -118,32 +118,6 @@
 
 .menuToggle[aria-expanded="true"] .menuLineBottom {
   transform: rotate(-45deg);
-}
-
-/* Two classes deep so the outline wins over the shared button's white fill. An outline, not a solid block:
-   the store link is not live yet, so it should not out-shout the menu. */
-.actions .cta {
-  flex: none;
-  height: 40px;
-  padding: 0 1rem;
-  border: 1px solid var(--white-60);
-  border-radius: 0.25rem;
-  background-color: transparent;
-  color: var(--white);
-  font-size: 0.875rem;
-  line-height: 1;
-  transition:
-    background-color var(--duration-fast) ease-out,
-    border-color var(--duration-fast) ease-out,
-    color var(--duration-fast) ease-out;
-}
-
-@media (hover: hover) {
-  .actions .cta:hover {
-    border-color: var(--white);
-    background-color: var(--white);
-    color: var(--navy);
-  }
 }
 
 /* Menu: a panel under the toggle on desktop, a full-screen sheet below it */
@@ -306,10 +280,6 @@
     padding: calc(var(--top-band) + 3rem) 1.25rem 1.5rem;
     background: #000;
   }
-
-  .actions .cta {
-    display: none;
-  }
 }
 
 @media (max-width: 639px) {
@@ -328,8 +298,7 @@
   .menuExtras,
   .sectionLabel,
   .menuLineTop,
-  .menuLineBottom,
-  .actions .cta {
+  .menuLineBottom {
     transition: none;
   }
 }

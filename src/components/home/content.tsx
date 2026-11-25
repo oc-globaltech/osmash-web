@@ -9,6 +9,7 @@ export type PlayerPoint = {
 export type Step = {
   title: string;
   body: string;
+  shot: { src: string; alt: string };
 };
 
 // Anchor ids: #product (hero), #players (first player point), #how (steps), #download.
@@ -20,13 +21,18 @@ export const NAV = {
     { href: "#download", label: "Coming soon" },
   ],
   menuLabel: "Menu",
-  ctaLabel: "Coming soon",
 } as const;
 
 export const HERO = {
   // Read by screen readers only; the slide tags are the visible headline.
   heading: "Smash your limits",
   scrollHint: "Scroll down",
+} as const;
+
+// Above the phone in the close-up and the photo; which word shows depends on the input.
+export const SLIDE_HINT = {
+  pointer: "Drag",
+  touch: "Swipe",
 } as const;
 
 export const SUBHEAD = "For players & guardians";
@@ -96,10 +102,32 @@ export const PLAYER_POINTS: PlayerPoint[] = [
 ];
 
 // The three steps of the How it works section.
+// The app has no role-picker screen yet; step 1 shows a guardian's home, one of the three roles.
 export const STEPS: Step[] = [
-  { title: "Pick your role", body: "Coach, player or guardian. Choose how you use O'Smash." },
-  { title: "Join your team", body: "Create an academy, or join one with an invite link or code." },
-  { title: "Get on court", body: "Sessions, check-ins and fees run from your phone." },
+  {
+    title: "Pick your role",
+    body: "Coach, player or guardian. Choose how you use O'Smash.",
+    shot: {
+      src: "/app-screens/family.webp",
+      alt: "Guardian home screen in O'Smash with My QR, Find a coach, My children and an academy invite",
+    },
+  },
+  {
+    title: "Join your team",
+    body: "Create an academy, or join one with an invite link or code.",
+    shot: {
+      src: "/app-screens/discover.webp",
+      alt: "List of academies and solo coaches in Kuala Lumpur, each with an Ask to join button",
+    },
+  },
+  {
+    title: "Get on court",
+    body: "Sessions, check-ins and fees run from your phone.",
+    shot: {
+      src: "/app-screens/player-check-in.webp",
+      alt: "Player home screen showing the next session at Court 3 with a Scan to check in button",
+    },
+  },
 ];
 
 export const FAQ = {

@@ -109,6 +109,13 @@
     scale var(--duration-fast) ease-out;
 }
 
+/* Hidden for mouse and touch (drag, swipe and side-shuttle clicks change the slide);
+   they appear only while a keyboard user has focus on them. */
+.arrow:not(:focus-visible) {
+  clip-path: inset(50%);
+  pointer-events: none;
+}
+
 .forward {
   --nudge: 2px;
 }

@@ -4,7 +4,7 @@ import { useId } from "react";
 
 import { Button } from "@/components/shared/Button";
 import { OsmashLockup } from "@/components/shared/OsmashLockup";
-import { COPYRIGHT, STORE_URL, SUPPORT_MAILTO } from "@/components/shared/osmash";
+import { COPYRIGHT, SUPPORT_MAILTO } from "@/components/shared/osmash";
 
 import { DOWNLOAD, FAQ, NAV } from "../content";
 import { useScrollStage } from "./scrollStage";
@@ -13,7 +13,7 @@ import { useTopBarMenu } from "./topBarMenu";
 
 const LINK_STAGGER_S = 0.08;
 
-// Fixed top bar: centred logo, menu toggle with its menu, and the store button on desktop.
+// Fixed top bar: logo on the left, and the menu toggle with its menu.
 export function TopBar() {
   return (
     <header className={styles.topBar} data-part="nav">
@@ -24,10 +24,6 @@ export function TopBar() {
         <SectionLabel />
         <div className={styles.actions}>
           <MenuArea />
-          {/* A plain span opts out of the letter roll, which would fight the hover fill. */}
-          <Button href={STORE_URL} className={styles.cta} data-part="nav-cta">
-            <span>{NAV.ctaLabel}</span>
-          </Button>
         </div>
       </div>
       <div className={styles.shade} data-part="nav-overlay" aria-hidden="true" />
