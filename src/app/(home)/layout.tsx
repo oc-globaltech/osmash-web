@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 import { FONT_VARIABLES } from "@/app/fonts";
-import { SITE_URL } from "@/components/shared/osmash";
+import { SHARE_DESCRIPTION, SITE_URL } from "@/components/shared/osmash";
 
 import "../tokens.css";
 import "../base.css";
@@ -10,21 +10,29 @@ import "../base.css";
 const TITLE = "O'Smash — Badminton coaching, run from the court";
 const DESCRIPTION =
   "Sessions, QR attendance and monthly fees for badminton academies, solo coaches, players and parents. Coming soon to the App Store and Google Play.";
-const SHARE_DESCRIPTION =
-  "Sessions, QR attendance and monthly fees for badminton academies, solo coaches, players and parents.";
+const SHARE_IMAGE = {
+  url: "/photos/smash-jump.jpg",
+  width: 2400,
+  height: 1600,
+  alt: "Badminton player jumping for a smash on an indoor court",
+};
 const SCROLL_RESTORATION_SCRIPT = "if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: TITLE,
   description: DESCRIPTION,
+  alternates: { canonical: "/" },
   openGraph: {
     title: TITLE,
     description: SHARE_DESCRIPTION,
     type: "website",
-    images: "/photos/smash-jump.jpg",
+    url: "/",
+    siteName: "O'Smash",
+    locale: "en_MY",
+    images: SHARE_IMAGE,
   },
-  twitter: { card: "summary_large_image", title: TITLE, description: SHARE_DESCRIPTION },
+  twitter: { card: "summary_large_image", title: TITLE, description: SHARE_DESCRIPTION, images: SHARE_IMAGE },
 };
 
 type HomeLayoutProps = {
