@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 import { FONT_VARIABLES } from "@/app/fonts";
+import { SITE_URL } from "@/components/shared/osmash";
 
 import "../tokens.css";
 import "../base.css";
@@ -14,6 +15,7 @@ const SHARE_DESCRIPTION =
 const SCROLL_RESTORATION_SCRIPT = "if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: TITLE,
   description: DESCRIPTION,
   openGraph: {

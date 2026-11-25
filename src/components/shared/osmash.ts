@@ -1,3 +1,4 @@
+export const SITE_URL = "https://osmash.ocgt.app";
 export const SUPPORT_MAILTO = "mailto:support@osmash.ocgt.app";
 export const COPYRIGHT = "© 2026 OC Global Technology Sdn. Bhd.";
 // @placeholder store listings are not live yet.
