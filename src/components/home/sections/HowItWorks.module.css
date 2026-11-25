@@ -9,15 +9,15 @@
 
 /* Top padding clears the fixed TopBar and its section label at the faq landing. */
 .steps {
-  padding-top: var(--space-6);
+  padding-top: var(--space-7);
   padding-inline: var(--gutter);
 }
 
 .title {
   font-family: var(--font-display);
-  font-size: max(31.5px, 7.5vw);
+  font-size: var(--title-l);
   font-weight: var(--weight-semibold);
-  line-height: 0.8;
+  line-height: 0.9;
   text-transform: uppercase;
 }
 
@@ -25,86 +25,81 @@
   display: block;
 }
 
+/* Phone: a row of step cards that scrolls sideways, bleeding to the screen edges; the next card peeks in. */
 .list {
-  margin-top: var(--space-7);
-  border-bottom: var(--rule);
+  display: grid;
+  grid-auto-columns: 62vw;
+  grid-auto-flow: column;
+  column-gap: var(--space-5);
+  margin-top: var(--space-6);
+  margin-inline: calc(-1 * var(--gutter));
+  padding-inline: var(--gutter);
+  padding-bottom: var(--space-2);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-padding-inline: var(--gutter);
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
   counter-reset: step;
   list-style: none;
 }
 
-/* Phone: number and step title share a line, the body hangs under the title. */
 .step {
-  display: grid;
-  grid-template-columns: 2rem minmax(0, 1fr);
-  align-items: baseline;
-  column-gap: var(--space-3);
-  padding-block: var(--space-6);
-  border-top: var(--rule);
+  min-width: 0;
+  scroll-snap-align: start;
   counter-increment: step;
 }
 
-.step::before {
-  content: counter(step);
-  color: var(--white-60);
-  font-family: var(--font-display);
-  font-size: var(--title-s);
-  font-weight: var(--weight-medium);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-}
-
 .stepTitle {
+  margin-top: var(--space-5);
   font-family: var(--font-display);
   font-size: var(--text-l);
   font-weight: var(--weight-semibold);
   line-height: var(--leading-snug);
 }
 
+.stepTitle::before {
+  content: counter(step);
+  margin-right: 0.6em;
+  color: var(--white-60);
+  font-variant-numeric: tabular-nums;
+}
+
 .stepBody {
-  grid-column: 2;
-  max-inline-size: 26ch;
+  max-inline-size: 32ch;
   margin-top: var(--space-2);
   color: var(--white-80);
   font-size: var(--text-m);
   line-height: var(--leading-body);
 }
 
-/* Tablet up: the steps read left to right as three columns, each under its own hairline. */
+/* Tablet up: all three steps fit side by side, so the row stops scrolling. */
 @media (min-width: 640px) {
   .list {
-    display: grid;
+    grid-auto-columns: auto;
+    grid-auto-flow: row;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: var(--space-5);
-    border-bottom: 0;
-  }
-
-  .step {
-    display: block;
-    padding-block: var(--space-5) 0;
-  }
-
-  .step::before {
-    display: block;
-  }
-
-  .stepTitle {
-    margin-top: var(--space-4);
+    margin-inline: 0;
+    padding: 0;
+    overflow-x: visible;
+    scroll-snap-type: none;
   }
 }
 
 @media (min-width: 1024px) {
   .steps {
     width: 80vw;
+    padding-top: var(--space-6);
     margin-inline: auto;
     padding-inline: 0;
   }
 
-  .title {
-    font-size: 7.5vw;
-  }
-
   .list {
     column-gap: var(--space-7);
-    margin-top: var(--space-8);
+    margin-top: var(--space-7);
+  }
+
+  .phone {
+    max-inline-size: 16rem;
   }
 }
