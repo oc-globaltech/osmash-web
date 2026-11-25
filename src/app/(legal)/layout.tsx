@@ -21,8 +21,8 @@ export default function LegalLayout({ children }: LegalLayoutProps) {
   return (
     <html className={FONT_VARIABLES} lang="en">
       <body className={styles.page}>
-        {children}
         <LegalHeader />
+        {children}
       </body>
     </html>
   );

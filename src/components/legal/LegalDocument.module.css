@@ -1,164 +1,182 @@
+/* Sidebar plus a reading column, centred as one block; the body size here makes 58ch match the article's. */
 .document {
-  display: block;
-  padding: calc(8rem + 2vw) 4vw 2vw;
-}
-
-.columns {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 16rem minmax(0, 58ch);
+  justify-content: center;
+  gap: var(--space-8);
+  font-size: var(--text-m);
+  padding: var(--space-8) var(--gutter) var(--space-9);
 }
 
-/* Fixed without insets: it stays where the flow puts it and shrinks to its widest line. */
+/* Doc nav: a rule down the left, the current page marked by a 2px accent bar over it. */
+
 .aside {
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2.8vw;
-}
-
-.title {
-  margin: 0 0 1.25rem;
-  font-family: var(--font-display);
-  font-size: 4.167vw;
-  font-weight: var(--weight-semibold);
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.status {
-  margin: 0;
-  font-size: 1.125rem;
-  line-height: 1.5;
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-8));
+  align-self: start;
 }
 
 .links {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  border-left: var(--rule);
 }
 
 .link {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  display: block;
+  margin-left: -1px;
+  padding: var(--space-2) var(--space-4);
+  border-left: 2px solid transparent;
   color: var(--white-60);
-  text-decoration: none;
+  font-size: var(--text-s);
+  line-height: var(--leading-snug);
+  transition: color var(--duration-fast) ease-out;
 }
 
 .link[aria-current="page"] {
+  border-left-color: var(--accent-2);
   color: var(--white);
 }
 
-/* Part of the frozen hook list; the old page never shows it. */
-.dot {
-  display: none;
-  width: 0.25rem;
-  height: 0.25rem;
-  border-radius: 50%;
-  background-color: var(--white);
+@media (hover: hover) {
+  .link:hover {
+    color: var(--white);
+  }
 }
 
+.link:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+/* Document */
+
+/* General Sans sets about 1.3 characters per ch, so 58ch keeps body lines near 75 characters. */
 .content {
-  grid-column: 2;
-  max-width: 48rem;
+  min-width: 0;
+  max-width: 58ch;
+}
+
+.intro {
+  margin-bottom: var(--space-7);
+  padding-bottom: var(--space-6);
+  border-bottom: var(--rule);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--title-m);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  text-transform: uppercase;
+}
+
+.status {
+  margin-top: var(--space-4);
+  color: var(--white-60);
+  font-size: var(--text-s);
 }
 
 .text {
-  display: flow-root;
-}
-
-.text > :last-child,
-.text li:last-child {
-  margin-bottom: 0;
+  color: var(--white-80);
+  line-height: 1.7;
+  overflow-wrap: break-word;
 }
 
 .text p {
-  margin: 0 0 1.25rem;
-  line-height: 1.7;
+  margin-bottom: var(--space-4);
 }
 
 .text h3 {
-  margin: 2.8vw 0 1.25rem;
+  margin: var(--space-8) 0 var(--space-4);
+  color: var(--white);
   font-family: var(--font-display);
-  font-size: 1.75rem;
+  font-size: var(--title-s);
   font-weight: var(--weight-semibold);
-  line-height: 1.2;
+  line-height: var(--leading-snug);
   text-transform: uppercase;
 }
 
 .text ul {
-  overflow: hidden;
-  margin: 1.25rem 0;
-  padding-left: 1.25rem;
+  margin: var(--space-4) 0 var(--space-5);
+  padding-left: var(--space-5);
   list-style: disc;
 }
 
 .text li {
-  margin: 0.25rem 0;
-  padding-left: 0.5rem;
+  margin-bottom: var(--space-2);
+  padding-left: var(--space-1);
+}
+
+.text li::marker {
+  color: var(--white-60);
 }
 
 .text strong {
-  font-weight: 700;
+  color: var(--white);
+  font-weight: var(--weight-semibold);
 }
 
 .text a {
-  color: inherit;
+  color: var(--white);
   text-decoration: underline;
+  text-decoration-color: var(--white-60);
+  text-underline-offset: 0.2em;
 }
 
-.fade {
-  position: fixed;
-  inset: 0;
-  background-image: linear-gradient(#000, rgb(0 0 0 / 0%) 15%);
-  pointer-events: none;
+.text a:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.text > :last-child {
+  margin-bottom: 0;
 }
 
 @media (max-width: 1023px) {
   .document {
-    padding-top: calc(8rem + 2rem);
-    padding-bottom: 2rem;
-  }
-
-  .columns {
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
+    grid-template-columns: minmax(0, 58ch);
+    gap: var(--space-6);
+    padding-top: var(--space-5);
+    padding-bottom: var(--space-8);
   }
 
   .aside {
-    position: relative;
-    align-items: center;
-    gap: 2.5rem;
-    text-align: center;
+    position: static;
   }
 
-  .title {
-    font-size: 2.5rem;
-  }
-
-  .status {
-    line-height: 1.25;
-  }
-
+  /* A row of underline tabs; it scrolls sideways inside itself if the labels ever outgrow the screen. */
   .links {
     flex-direction: row;
-    justify-content: center;
-    gap: 2rem;
+    gap: var(--space-5);
+    overflow-x: auto;
+    border-bottom: var(--rule);
+    border-left: 0;
+    scrollbar-width: none;
+  }
+
+  .link {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    margin: 0 0 -1px;
+    padding: 0;
+    border-bottom: 2px solid transparent;
+    border-left: 0;
+    white-space: nowrap;
+  }
+
+  .link[aria-current="page"] {
+    border-bottom-color: var(--accent-2);
   }
 
   .text h3 {
-    margin-top: 2.5rem;
+    margin-top: var(--space-7);
   }
 }
 
-@media (max-width: 639px) {
-  .document {
-    padding-top: calc(7rem + 2rem);
-  }
-
-  .status {
-    font-size: 1rem;
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
   }
 }

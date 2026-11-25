@@ -15,41 +15,41 @@ type LegalDocumentProps = {
   children: ReactNode;
 };
 
+// Doc nav beside the document on desktop, a row of links above it below 1024px.
 export function LegalDocument({ title, path, children }: LegalDocumentProps) {
   return (
     <main className={styles.document} data-part="legal">
-      <div className={styles.columns}>
-        <div className={styles.aside} data-part="legal-aside">
-          <div>
-            <h1 className={styles.title} data-part="legal-title">
-              {title}
-            </h1>
-            <p className={styles.status} data-part="legal-status">
-              {STATUS}
-            </p>
-          </div>
-          <nav aria-label="Legal" className={styles.links} data-part="legal-links">
+      <aside className={styles.aside} data-part="legal-aside">
+        <nav aria-label="Legal" data-part="legal-links">
+          <ul className={styles.links}>
             {LEGAL_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                aria-current={link.href === path ? "page" : undefined}
-                className={styles.link}
-                data-part="legal-link"
-              >
-                <span className={styles.dot} data-part="legal-link-dot" />
-                <span>{link.label}</span>
-              </Link>
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  aria-current={link.href === path ? "page" : undefined}
+                  className={styles.link}
+                  data-part="legal-link"
+                >
+                  {link.label}
+                </Link>
+              </li>
             ))}
-          </nav>
+          </ul>
+        </nav>
+      </aside>
+      <article className={styles.content} data-part="legal-content">
+        <header className={styles.intro}>
+          <h1 className={styles.title} data-part="legal-title">
+            {title}
+          </h1>
+          <p className={styles.status} data-part="legal-status">
+            {STATUS}
+          </p>
+        </header>
+        <div className={styles.text} data-part="legal-text">
+          {children}
         </div>
-        <div className={styles.content} data-part="legal-content">
-          <div className={styles.text} data-part="legal-text">
-            {children}
-          </div>
-        </div>
-      </div>
-      <div className={styles.fade} data-part="legal-overlay" />
+      </article>
     </main>
   );
 }
