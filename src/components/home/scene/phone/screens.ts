@@ -39,9 +39,26 @@ export const placeholderScreens: ScreenSource = async (feature) => {
   return new THREE.CanvasTexture(canvas);
 };
 
+// Safari keeps the image path, as three's own GLTFLoader does: its ImageBitmap support is not trusted there.
+const decodesOffThread = (): boolean =>
+  typeof createImageBitmap === "function" && !/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+// Decoded off the main thread. WebGL ignores flipY for a bitmap, so the bitmap comes flipped instead.
+async function loadBitmapTexture(url: string): Promise<THREE.Texture> {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`${response.status} ${url}`);
+  const bitmap = await createImageBitmap(await response.blob(), { imageOrientation: "flipY" });
+  const texture = new THREE.Texture(bitmap);
+  texture.flipY = false;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+const loadScreenTexture = (url: string): Promise<THREE.Texture> =>
+  decodesOffThread() ? loadBitmapTexture(url) : new THREE.TextureLoader().loadAsync(url);
+
 // The real screenshots, one webp per slide in /public/app-screens.
-export const appScreenshots: ScreenSource = (feature) =>
-  new THREE.TextureLoader().loadAsync(`/app-screens/${feature.tag.toLowerCase()}.webp`);
+export const appScreenshots: ScreenSource = (feature) => loadScreenTexture(`/app-screens/${feature.tag.toLowerCase()}.webp`);
 
 function createScreenOffTexture(): THREE.DataTexture {
   const texture = new THREE.DataTexture(new Uint8Array(SCREEN_OFF_RGB), 1, 1);
@@ -97,7 +114,7 @@ export function createScreenMaterials(source: ScreenSource, deps: ScreenDeps, ov
       return texture;
     }),
     ...overrideUrls.map(async (url, index) => {
-      const texture = await loadScreen(new THREE.TextureLoader().loadAsync(url), deps);
+      const texture = await loadScreen(loadScreenTexture(url), deps);
       overrides[index] = texture;
       apply();
       return texture;

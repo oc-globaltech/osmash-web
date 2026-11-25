@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 
 import { gsap, type SplitText } from "@/components/shared/gsap";
+import { onIdle } from "@/components/shared/idle";
 
 import { PLAYER_POINTS, SUBHEAD, type PlayerPoint } from "../content";
 import { PLAYER_STAGES, type StageName } from "../stages";
@@ -44,8 +45,29 @@ function markRail(links: HTMLElement[], current: number): void {
   });
 }
 
+// Splitting measures every line, so it stays off the hydration task: one point per idle period, or at once
+// for a point whose stage arrives first.
+function splitPointsWhenIdle(blocks: HTMLElement[], signal: AbortSignal): (index: number) => PointText {
+  const points: (PointText | undefined)[] = blocks.map(() => undefined);
+  const pointAt = (index: number) => (points[index] ??= splitPoint(blocks[index]));
+  const splitNext = () => {
+    const index = points.indexOf(undefined);
+    if (index < 0) return;
+    pointAt(index);
+    onIdle(splitNext, signal);
+  };
+  onIdle(splitNext, signal);
+  signal.addEventListener(
+    "abort",
+    () => points.forEach((point) => point && [point.title, point.body].forEach((split) => split.revert())),
+    { once: true },
+  );
+  return pointAt;
+}
+
 function bindPoints(root: HTMLElement, signal: AbortSignal): void {
-  const points = Array.from(root.querySelectorAll<HTMLElement>(`.${styles.text}`), splitPoint);
+  const blocks = Array.from(root.querySelectorAll<HTMLElement>(`.${styles.text}`));
+  const pointAt = splitPointsWhenIdle(blocks, signal);
   const rail = root.querySelector<HTMLElement>(`.${styles.rail}`);
   const links = Array.from(root.querySelectorAll<HTMLElement>(`.${styles.railLink}`));
   let shownIndex = -1;
@@ -55,18 +77,11 @@ function bindPoints(root: HTMLElement, signal: AbortSignal): void {
     else if (rail) fadeOut(rail);
     markRail(links, index);
     if (index === shownIndex) return;
-    if (shownIndex >= 0) fadeOut(points[shownIndex].block);
-    if (index >= 0) showPoint(points[index]);
+    if (shownIndex >= 0) fadeOut(blocks[shownIndex]);
+    if (index >= 0) showPoint(pointAt(index));
     shownIndex = index;
   }, signal);
-  signal.addEventListener(
-    "abort",
-    () => {
-      gsap.killTweensOf(points.map((point) => point.block));
-      points.forEach(({ title, body }) => [title, body].forEach((split) => split.revert()));
-    },
-    { once: true },
-  );
+  signal.addEventListener("abort", () => gsap.killTweensOf(blocks), { once: true });
 }
 
 // Four scroll beats for players, each with its pinned text, plus the rail of links to them.

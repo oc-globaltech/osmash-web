@@ -26,7 +26,8 @@ function drawCrescent(context: CanvasRenderingContext2D): void {
     for (let x = 0; x < SIZE; x++) {
       const level = Math.round(255 * crescentAt((x + 0.5) / SIZE - ARC_CENTRE_X, (y + 0.5) / SIZE - ARC_CENTRE_Y));
       const index = (y * SIZE + x) * 4;
-      image.data.set([level, level, level, 255], index);
+      image.data.fill(level, index, index + 3);
+      image.data[index + 3] = 255;
     }
   }
   context.putImageData(image, 0, 0);

@@ -28,11 +28,24 @@ function createHotPanel(): THREE.Mesh {
   return sun;
 }
 
-// Prefilters the studio room into scene.environment; the returned disposer frees the PMREM resources.
-export function createRoomLight(renderer: THREE.WebGLRenderer, scene: THREE.Scene): () => void {
-  const pmrem = new THREE.PMREMGenerator(renderer);
+function createRoom(renderer: THREE.WebGLRenderer): RoomEnvironment {
   const room = new RoomEnvironment(renderer);
   room.add(createHotPanel());
+  return room;
+}
+
+// PMREM draws the room into a half-float target; compiling against one gives the same shader variants.
+async function compileRoom(renderer: THREE.WebGLRenderer, room: RoomEnvironment): Promise<void> {
+  const target = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType });
+  renderer.setRenderTarget(target);
+  const compiled = renderer.compileAsync(room, new THREE.PerspectiveCamera());
+  renderer.setRenderTarget(null);
+  target.dispose();
+  await compiled;
+}
+
+function prefilterRoom(renderer: THREE.WebGLRenderer, scene: THREE.Scene, room: RoomEnvironment): () => void {
+  const pmrem = new THREE.PMREMGenerator(renderer);
   const envMap = pmrem.fromScene(room).texture;
   room.dispose();
   scene.environment = envMap;
@@ -40,6 +53,23 @@ export function createRoomLight(renderer: THREE.WebGLRenderer, scene: THREE.Scen
     envMap.dispose();
     pmrem.dispose();
   };
+}
+
+// Prefilters the studio room into scene.environment; the returned disposer frees the PMREM resources.
+export const createRoomLight = (renderer: THREE.WebGLRenderer, scene: THREE.Scene): (() => void) =>
+  prefilterRoom(renderer, scene, createRoom(renderer));
+
+// The same, with the room's shaders compiled in parallel first, so the prefilter does not stall on them.
+export async function createRoomLightAsync(renderer: THREE.WebGLRenderer, scene: THREE.Scene, signal: AbortSignal): Promise<() => void> {
+  const room = createRoom(renderer);
+  try {
+    await compileRoom(renderer, room);
+    signal.throwIfAborted();
+  } catch (error) {
+    room.dispose();
+    throw error;
+  }
+  return prefilterRoom(renderer, scene, room);
 }
 
 function addSpot(scene: THREE.Scene, spec: { coneDeg: number; penumbra: number }): THREE.SpotLight {

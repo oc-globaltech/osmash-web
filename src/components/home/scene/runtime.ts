@@ -10,7 +10,7 @@ import { bindAnchorScroll } from "./anchorScroll";
 import { CarouselInput } from "./carouselInput";
 import { CarouselRig } from "./carouselRig";
 import { readDeviceProfile } from "./device";
-import { createLightRig, createRoomLight, type LightRig } from "./lighting";
+import { createLightRig, createRoomLight, createRoomLightAsync, type LightRig } from "./lighting";
 import { createMaterialFactory, type MaterialFactory } from "./materialKit";
 import { applyOrbit } from "./orbitCamera";
 import { createPhones, type Phones } from "./phone/phones";
@@ -18,7 +18,7 @@ import { appScreenshots } from "./phone/screens";
 import { updateCallouts } from "./screenCallouts";
 import { createPodium, type Podium } from "./podium";
 import { PoseTrack, resolvePhonePose, resolvePose } from "./poseTrack";
-import { createShuttles } from "./shuttle/shuttles";
+import { createShuttles, type Shuttles } from "./shuttle/shuttles";
 import { createSmoothScroll } from "./smoothScroll";
 import { measureStages, type StageBand } from "./stageLayout";
 import { StagePager } from "./stagePaging";
@@ -45,48 +45,77 @@ type Runtime = Scene & {
   bands: StageBand[];
   track: PoseTrack;
   contextLost: boolean;
+  // Kept from resize events: reading window.innerWidth in the frame loop forces a layout.
+  viewportWidth: number;
 };
 
 const buildTrack = (bands: StageBand[]): PoseTrack => new PoseTrack(bands, isPhone() ? resolvePhonePose : resolvePose);
 
 // The phones stay hidden until the handover: compile their shaders now, for the scene pass's target format,
-// so their first appearance mid-scroll does not stall a frame.
-function warmUp(view: View, phones: THREE.Object3D[]): void {
+// so their first appearance mid-scroll does not stall a frame. The GPU compiles them in parallel.
+async function warmUp(view: View, phones: THREE.Object3D[]): Promise<void> {
   phones.forEach((phone) => (phone.visible = true));
   view.renderer.setRenderTarget(view.sceneTarget);
-  view.renderer.compile(view.scene, view.camera);
+  const compiled = view.renderer.compileAsync(view.scene, view.camera);
   view.renderer.setRenderTarget(null);
   phones.forEach((phone) => (phone.visible = false));
+  await compiled;
 }
 
-function buildScene(signal: AbortSignal): Scene {
+// What the build has made so far, for the teardown.
+type Built = Partial<{ view: View; disposeRoom: () => void; lights: LightRig; materials: MaterialFactory; shuttles: Shuttles; phones: Phones }>;
+
+function disposeBuilt(built: Built): void {
+  built.view?.scene.traverse((object) => {
+    if (object instanceof THREE.Mesh) object.geometry.dispose();
+  });
+  built.shuttles?.dispose();
+  built.phones?.dispose();
+  built.materials?.dispose();
+  built.lights?.dispose();
+  built.disposeRoom?.();
+  built.view?.dispose();
+}
+
+// Hands the main thread back between build steps, so no single step blocks input for long.
+async function nextTask(signal: AbortSignal): Promise<void> {
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  signal.throwIfAborted();
+}
+
+async function buildSteps(built: Built, signal: AbortSignal): Promise<Scene> {
   const profile = readDeviceProfile();
   const view = createView(profile);
-  let disposeRoom = createRoomLight(view.renderer, view.scene);
+  built.view = view;
+  await nextTask(signal);
+  built.disposeRoom = await createRoomLightAsync(view.renderer, view.scene, signal);
   // The lost context already freed the old room on the GPU; disposing it now would delete foreign handles.
-  const relight = () => (disposeRoom = createRoomLight(view.renderer, view.scene));
+  const relight = () => (built.disposeRoom = createRoomLight(view.renderer, view.scene));
+  await nextTask(signal);
   const lights = createLightRig(view.scene);
+  built.lights = lights;
+  await nextTask(signal);
   const materials = createMaterialFactory(profile);
+  built.materials = materials;
   const podium = createPodium(view.scene, materials);
   const shuttles = createShuttles(view.scene, view.renderer, { materials, profile });
+  built.shuttles = shuttles;
+  await nextTask(signal);
   const phones = createPhones(view.scene, view.renderer, { materials, screens: appScreenshots, overrideScreens: PLAYER_SCREENS, signal });
-  warmUp(view, phones.items.map(({ group }) => group));
-  signal.addEventListener(
-    "abort",
-    () => {
-      view.scene.traverse((object) => {
-        if (object instanceof THREE.Mesh) object.geometry.dispose();
-      });
-      shuttles.dispose();
-      phones.dispose();
-      materials.dispose();
-      lights.dispose();
-      disposeRoom();
-      view.dispose();
-    },
-    { once: true },
-  );
+  built.phones = phones;
+  await nextTask(signal);
+  await warmUp(view, phones.items.map(({ group }) => group));
+  signal.throwIfAborted();
   return { view, phones, lights, materials, podium, rig: new CarouselRig(shuttles.groups, phones.items), relight };
+}
+
+// Builds the scene over several tasks; everything built is freed when `signal` aborts, after the step in flight
+// settles (three's async compile keeps polling the materials it was given).
+function buildScene(signal: AbortSignal): Promise<Scene> {
+  const built: Built = {};
+  const build = buildSteps(built, signal);
+  signal.addEventListener("abort", () => void build.catch(() => undefined).then(() => disposeBuilt(built)), { once: true });
+  return build;
 }
 
 function renderFrame(runtime: Runtime, seconds: number): void {
@@ -94,7 +123,7 @@ function renderFrame(runtime: Runtime, seconds: number): void {
   const pose = runtime.track.sample(scroll);
   runtime.carousel.step(seconds);
   runtime.input.update(seconds);
-  runtime.rig.apply({ pose, heroShare: runtime.track.heroShare(scroll), position: runtime.carousel.position, pointer: runtime.input.pointer, viewportWidth: window.innerWidth });
+  runtime.rig.apply({ pose, heroShare: runtime.track.heroShare(scroll), position: runtime.carousel.position, pointer: runtime.input.pointer, viewportWidth: runtime.viewportWidth });
   applyOrbit(runtime.view.camera, pose);
   runtime.lights.apply(pose);
   runtime.materials.setRoomLevel(pose.envLevel);
@@ -153,10 +182,9 @@ function remeasure(runtime: Runtime): void {
 // Stage bands move when fonts, images or the accordion change the page height; the view only on a width
 // change, so a mobile toolbar sliding away does not resize the canvas.
 function watchLayout(runtime: Runtime, signal: AbortSignal): void {
-  let width = window.innerWidth;
   const onResize = () => {
-    if (window.innerWidth === width) return;
-    width = window.innerWidth;
+    if (window.innerWidth === runtime.viewportWidth) return;
+    runtime.viewportWidth = window.innerWidth;
     runtime.view.resize();
     remeasure(runtime);
   };
@@ -177,10 +205,10 @@ function styleCanvas(canvas: HTMLCanvasElement): void {
   Object.assign(canvas.style, { position: "fixed", inset: "0", zIndex: "var(--z-scene)", opacity: "0" });
 }
 
-// Builds the WebGL scene into `host` and drives scroll, paging, anchors and carousel input; returns the
+// Builds the WebGL scene into `host` and drives scroll, paging, anchors and carousel input; resolves to the
 // canvas, still transparent. Everything is torn down when `signal` aborts.
-export function mountScene(host: HTMLElement, carousel: CarouselStore, signal: AbortSignal): HTMLCanvasElement {
-  const scene = buildScene(signal);
+export async function mountScene(host: HTMLElement, carousel: CarouselStore, signal: AbortSignal): Promise<HTMLCanvasElement> {
+  const scene = await buildScene(signal);
   // Lenis only asks the gate on wheel events, after mountScene has returned and `pager` exists.
   const lenis = createSmoothScroll((data) => pager.takeWheel(data.event), signal);
   const bands = measureStages();
@@ -198,7 +226,7 @@ export function mountScene(host: HTMLElement, carousel: CarouselStore, signal: A
       leaveHero: () => pager.leaveHero(),
     },
   });
-  const runtime: Runtime = { ...scene, carousel, lenis, input, bands, track: buildTrack(bands), contextLost: false };
+  const runtime: Runtime = { ...scene, carousel, lenis, input, bands, track: buildTrack(bands), contextLost: false, viewportWidth: window.innerWidth };
   pager.bindTouch(signal);
   input.bind(signal);
   bindAnchorScroll(lenis, signal);
