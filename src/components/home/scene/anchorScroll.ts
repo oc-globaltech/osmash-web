@@ -34,15 +34,21 @@ function glide(lenis: Lenis, target: HTMLElement): void {
   });
 }
 
-// Same-page `#id` links glide there with Lenis, push the hash once and move focus to the target.
+// The address bar stays on the clean page URL: no `#id`, and no history entry per jump.
+function clearHash(): void {
+  if (location.hash) history.replaceState(history.state, "", location.pathname + location.search);
+}
+
+// Same-page `#id` links glide there with Lenis and move focus to the target, without writing the hash.
 export function bindAnchorScroll(lenis: Lenis, signal: AbortSignal): void {
+  clearHash();
   const onClick = (event: MouseEvent) => {
     if (!isPlainClick(event) || !(event.target instanceof Element)) return;
     const link = event.target.closest<HTMLAnchorElement>("a[href*='#']");
     const target = link && sameDocumentTarget(link);
     if (!link || !target) return;
     event.preventDefault();
-    if (location.hash !== link.hash) history.pushState(history.state, "", link.hash);
+    clearHash();
     // Next task: a menu link closes the sheet in this tick, and restarting Lenis then would cancel the glide.
     setTimeout(() => signal.aborted || glide(lenis, target), 0);
   };
