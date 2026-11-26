@@ -30,10 +30,6 @@ const HERO_TURNS = [
 ] as const;
 const HERO_TURN_CENTRE = (HERO_TURNS.length - 1) / 2;
 const SHUTTLE_AXIS = new THREE.Vector3(0, 1, 0);
-// Ring swirl: slots climb, lean and turn more the further they sit from the centre.
-const SWIRL_LIFT_PER_UNIT = 0.014;
-const SWIRL_PITCH_PER_UNIT = 0.12;
-const SWIRL_SPIN_PER_SLOT = 0.35;
 // Handover windows [start, end] on the focused slot's share: the shuttle shrinks away, then the phone grows in from
 // edge-on. Both bodies are tiny where the windows overlap, so they never read as passing through each other.
 const SHUTTLE_SHRINK_WINDOW = [0, 0.55] as const;
@@ -117,22 +113,19 @@ function poseShuttle(shuttle: THREE.Group, place: SlotPlace, frame: RigFrame): v
   const widthRatio = clamp(DESIGN_WIDTH / frame.viewportWidth, 1, WIDTH_RATIO_CAP);
   const heroY = Math.sin(place.x * HERO_WAVE.perUnit * widthRatio) * HERO_WAVE.height * wave;
   const heroZ = -(Math.abs(place.x) * HERO_DEPTH.perUnit + HERO_DEPTH.base) * wave;
-  const swirlX = place.x * pose.ringSwirl;
   shuttle.position.set(
     lerp(place.x * HERO_SPREAD, place.x, share) + pose.modelX,
-    lerp(heroY, pose.modelY, share) + swirlX * SWIRL_LIFT_PER_UNIT,
+    lerp(heroY, pose.modelY, share),
     lerp(heroZ, pose.modelZ, share),
   );
   const heroTurn = new THREE.Quaternion().slerp(heroQuaternion(heroTurnAt(place.offset)), wave);
   const stageTurn = new THREE.Quaternion().setFromEuler(
-    new THREE.Euler(degToRad(pose.modelPitch) + swirlX * SWIRL_PITCH_PER_UNIT, degToRad(pose.modelYaw), degToRad(pose.modelRoll)),
+    new THREE.Euler(degToRad(pose.modelPitch), degToRad(pose.modelYaw), degToRad(pose.modelRoll)),
   );
   const parallax = pose.pointerAmount * place.focus;
   const pointerTurn = new THREE.Quaternion().setFromEuler(new THREE.Euler(pointer.y * parallax, pointer.x * parallax, 0));
   shuttle.quaternion.slerpQuaternions(heroTurn, stageTurn, share).multiply(pointerTurn);
   shuttle.scale.setScalar(lerp(HERO_SCALE.centre + Math.abs(place.x) * HERO_SCALE.perUnit, pose.modelScale, share));
-  const spin = place.offset * pose.ringSwirl * SWIRL_SPIN_PER_SLOT;
-  shuttle.children.forEach((part) => (part.rotation.z = spin));
 }
 
 // The phone takes the shuttle's pose and grows in while turning from edge-on to its sway.

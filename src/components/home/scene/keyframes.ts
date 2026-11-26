@@ -67,29 +67,19 @@ export const KEYFRAMES: readonly StageKeyframe[] = [
     },
     drag: true,
   },
-  // Back to the shuttles: a tight swirling ring seen from the left, tubes gone.
-  {
-    stage: "ring",
-    pose: {
-      targetX: 0.28, targetY: 0.38, targetZ: -0.59, distance: 19.03, azimuth: -8.7, elevation: 3.8, roll: -8.6, fov: 33,
-      modelY: 0.28, modelZ: -0.59, modelPitch: -2.9,
-      ringSpacing: 0.5, heroWave: 0, ringSwirl: 1.1, tubeGap: 38,
-      keyLight: 1.7, keyCone: 2.96, envLevel: 2.59,
-      pointerAmount: 0, dragSpeed: 1.8,
-    },
-    drag: true,
-  },
-  // The camera drops below the ring, so the reading pose is empty.
+  // The camera drops below the shuttles, so the reading pose is empty. The phone leaves as soon as this section
+  // scrolls in (the top of the 125svh photo band, 0.2 in), so it never holds behind the text.
   {
     stage: "faq",
     pose: {
       targetY: -5.45, targetZ: -0.16, distance: 11.5, elevation: 2, fov: 27,
       modelZ: -0.35,
-      ringSpacing: 0.64, heroWave: 0, ringSwirl: 1.1, tubeGap: 38,
+      ringSpacing: 0.64, heroWave: 0, tubeGap: 38,
       keyLight: 0, keyCone: 2.85, envLevel: 1.9,
       pointerAmount: 0,
     },
     drag: false,
+    transitionStart: 0.2,
   },
 ];
 

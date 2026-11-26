@@ -19,7 +19,6 @@ export type ScenePose = {
   modelScale: number;
   ringSpacing: number;
   heroWave: number;
-  ringSwirl: number;
   tubeGap: number;
   keyLight: number;
   keyCone: number;
@@ -38,6 +37,8 @@ export type StageKeyframe = {
   // Phone-width overrides.
   phone?: Partial<Pick<ScenePose, "modelX" | "modelY" | "distance">>;
   drag: boolean;
+  // Share of the previous stage at which the move into this one starts; the track's default when unset.
+  transitionStart?: number;
 };
 
 // The hero pose at load; every keyframe is a partial override of it.
@@ -59,7 +60,6 @@ export const INITIAL_POSE: Readonly<ScenePose> = {
   modelScale: 1,
   ringSpacing: 1,
   heroWave: 1,
-  ringSwirl: 0,
   tubeGap: 0,
   keyLight: 5.5,
   keyCone: 1,

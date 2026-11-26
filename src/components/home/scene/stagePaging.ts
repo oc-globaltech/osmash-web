@@ -8,7 +8,7 @@ import type { StageBand } from "./stageLayout";
 // A page lands this far above its stage top, so the beat before it has not fully handed over yet.
 const LANDING_ABOVE_PX = 10;
 // Paging reaches up to this stage; from there on, scrolling is native.
-const LAST_PAGED_STAGE: Readonly<Record<"desktop" | "touch", StageName>> = { desktop: "ring", touch: "faq" };
+const LAST_PAGED_STAGE: Readonly<Record<"desktop" | "touch", StageName>> = { desktop: "photo", touch: "faq" };
 const STAGE_STEP_SECONDS = 1.5;
 // Desktop steps between two player beats are quicker: the scene barely moves there.
 const PLAYER_STEP_SECONDS = 1;

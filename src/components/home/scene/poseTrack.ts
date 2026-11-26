@@ -4,11 +4,11 @@ import { clamp, lerp } from "./numeric";
 import { INITIAL_POSE, type ScenePose, type StageKeyframe } from "./params";
 import type { StageBand } from "./stageLayout";
 
-// A transition starts this far into the previous stage and lands at the top of the next one.
+// By default a transition starts this far into the previous stage and lands at the top of the next one.
 const TRANSITION_START = 0.7;
 
 type PoseKey = keyof ScenePose;
-type Stop = { band: StageBand; pose: ScenePose; drag: boolean };
+type Stop = { band: StageBand; pose: ScenePose; drag: boolean; transitionStart: number };
 
 export const resolvePose = (keyframe: StageKeyframe): ScenePose => ({ ...INITIAL_POSE, ...keyframe.pose });
 
@@ -34,7 +34,8 @@ export class PoseTrack {
   constructor(bands: StageBand[], resolve: (keyframe: StageKeyframe) => ScenePose) {
     this.stops = KEYFRAMES.flatMap((keyframe) => {
       const band = bands.find(({ stage }) => stage === keyframe.stage);
-      return band ? [{ band, pose: resolve(keyframe), drag: keyframe.drag }] : [];
+      const transitionStart = keyframe.transitionStart ?? TRANSITION_START;
+      return band ? [{ band, pose: resolve(keyframe), drag: keyframe.drag, transitionStart }] : [];
     });
   }
 
@@ -61,6 +62,6 @@ export class PoseTrack {
 
   private transitionStart(index: number): number {
     const previous = this.stops[index - 1].band;
-    return previous.top + previous.height * TRANSITION_START;
+    return previous.top + previous.height * this.stops[index].transitionStart;
   }
 }
