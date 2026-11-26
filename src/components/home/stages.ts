@@ -1,5 +1,5 @@
 // Scroll beats in page order, one per <section data-stage="<name>">; the scene holds one keyframe per beat.
-export const STAGES = ["hero", "closeup", "player1", "player2", "player3", "player4", "photo", "ring", "faq"] as const;
+export const STAGES = ["hero", "closeup", "player1", "player2", "player3", "player4", "photo", "faq"] as const;
 
 export type StageName = (typeof STAGES)[number];
 

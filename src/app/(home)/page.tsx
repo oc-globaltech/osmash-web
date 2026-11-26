@@ -7,7 +7,6 @@ import { CloseUp } from "@/components/home/sections/CloseUp";
 import { HowItWorks } from "@/components/home/sections/HowItWorks";
 import { PhotoStage } from "@/components/home/sections/PhotoStage";
 import { PlayerPoints } from "@/components/home/sections/PlayerPoints";
-import { RingStage } from "@/components/home/sections/RingStage";
 import { ShuttleHero } from "@/components/home/sections/ShuttleHero";
 
 export default function HomePage() {
@@ -20,7 +19,6 @@ export default function HomePage() {
         <CloseUp />
         <PlayerPoints />
         <PhotoStage />
-        <RingStage />
         <HowItWorks />
         <SceneCanvas />
       </main>

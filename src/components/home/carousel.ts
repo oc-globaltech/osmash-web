@@ -9,7 +9,7 @@ export type CarouselChange = { index: number; previous: number };
 type CarouselListener = (change: CarouselChange) => void;
 
 // Carousel position in slides, shared by the scene (moves it every frame) and the page (reacts to index changes).
-// Position and target are unbounded so the ring can keep turning; the slide index wraps.
+// Position and target are unbounded so the carousel can keep turning; the slide index wraps.
 export class CarouselStore {
   index = 0;
   position = 0;
